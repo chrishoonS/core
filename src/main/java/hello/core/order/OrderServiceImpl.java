@@ -3,11 +3,18 @@ package hello.core.order;
 import hello.core.discount.DiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
-import hello.core.member.MemoryMemberRepository;
 
 public class OrderServiceImpl implements OrderService{
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
+    // MemberRepository, DiscountPolicy => 철저히 inteface에 의존
+    private final MemberRepository memberRepository; // 생성자에 final이 있으면 생성자를 통해서 할당
+
+    private final DiscountPolicy discountPolicy;
+
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     /*
      * 할인 정책 변경을 위해 interface 교체
@@ -29,8 +36,6 @@ public class OrderServiceImpl implements OrderService{
 
 //    private final DiscountPolicy discountPolicy = new FixDiscountPolicy(); // 고정 할인
 //    private final DiscountPolicy discountPolicy = new RateDiscountPolicy(); // 정액 할인
-    private DiscountPolicy discountPolicy;
-
 
     /**
      * 주문 생성 요청
