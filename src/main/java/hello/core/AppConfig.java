@@ -6,6 +6,8 @@ import hello.core.member.MemberServiceImpl;
 import hello.core.member.MemoryMemberRepository;
 import hello.core.order.OrderService;
 import hello.core.order.OrderServiceImpl;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * 애플리케이션의 전체 동작 방식을 구성(config)하기 위해, 구현 객체를 생성
@@ -16,23 +18,29 @@ import hello.core.order.OrderServiceImpl;
  * 할인 정책 변경해도 애플리케이션 구성 역할을 담당하는 AppConfig만 수정하면 됨!(사용영역 코드는 수정 안해도됨(OrderServiceImpl 등..))
  *
  */
+@Configuration
 public class AppConfig {
+
+    @Bean // @Bean annotation 으로 spring container 에 등록
     public MemberService memberService() {
         // 생성자 주입
         // new MemoryMemberRepository() -> cmd+option+m으로 리팩토링
         return new MemberServiceImpl(memberRepository()); // DI(Dependency Injection, 의존관계 주입)
     }
 
-    private static MemoryMemberRepository memberRepository() {
+    @Bean
+    public static MemoryMemberRepository memberRepository() {
         return new MemoryMemberRepository();
     }
 
     // new FixDiscountPolicy() -> cmd+option+m으로 리팩토링
+    @Bean
     public OrderService orderService() {
         return new OrderServiceImpl(memberRepository(), discountPolicy());
     }
 
-    private static RateDiscountPolicy discountPolicy() {
+    @Bean
+    public static RateDiscountPolicy discountPolicy() {
 //        return new FixDiscountPolicy();
         return new RateDiscountPolicy();
     }

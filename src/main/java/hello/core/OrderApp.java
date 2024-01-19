@@ -5,15 +5,22 @@ import hello.core.member.Member;
 import hello.core.member.MemberService;
 import hello.core.order.Order;
 import hello.core.order.OrderService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class OrderApp {
 
     public static void main(String[] args) {
-        AppConfig appConfig = new AppConfig();
-        MemberService memberService = appConfig.memberService();
-        OrderService orderService = appConfig.orderService();
+//        AppConfig appConfig = new AppConfig();
+//        MemberService memberService = appConfig.memberService();
+//        OrderService orderService = appConfig.orderService();
 //        MemberServiceImpl memberService = new MemberServiceImpl(memberRepository);
 //        OrderService orderService = new OrderServiceImpl(memberRepository, discountPolicy);
+
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
+        // getBean : @Bean 으로 (등록된 메서드 이름, 해당클래스)로 가져옴
+        MemberService memberService = applicationContext.getBean("memberService", MemberService.class);
+        OrderService orderService = applicationContext.getBean("orderService", OrderService.class);
 
         Long memberId = 1L;
         Member member = new Member(memberId, "memberA", Grade.VIP);
